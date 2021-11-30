@@ -1,0 +1,669 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;-------------------------------------------------------
+                       -----------------
+    2 00000000 E002C000 
+                       PINSEL0 EQU              0xE002C000
+    3 00000000 E002C004 
+                       PINSEL1 EQU              0xE002C004
+    4 00000000 E002C014 
+                       PINSEL2 EQU              0xE002C014
+    5 00000000         
+    6 00000000 E0028008 
+                       IO0DIR  EQU              0xE0028008
+    7 00000000 E0028018 
+                       IO1DIR  EQU              0xE0028018
+    8 00000000         
+    9 00000000 E0028004 
+                       IO0SET  EQU              0xE0028004
+   10 00000000 E002800C 
+                       IO0CLR  EQU              0xE002800C
+   11 00000000         
+   12 00000000 E0028014 
+                       IO1SET  EQU              0xE0028014
+   13 00000000 E002801C 
+                       IO1CLR  EQU              0xE002801C
+   14 00000000         
+   15 00000000 E0028000 
+                       IO0PIN  EQU              0xE0028000
+   16 00000000 E0028010 
+                       IO1PIN  EQU              0xE0028010
+   17 00000000         
+   18 00000000         ;masks
+   19 00000000 00FF0000 
+                       LCD_DATA
+                               EQU              0x00FF0000  ;P1.16 - P1.23 Send
+                                                             info
+   20 00000000 01000000 
+                       LCD_RS  EQU              0x01000000  ;p1.24 0=CMD 1=CHAR
+                                                             interpretation
+   21 00000000 02000000 
+                       LCD_E   EQU              0x02000000  ;p1.25 Crank 1->0 t
+                                                            o execute
+   22 00000000 00400000 
+                       LCD_RW  EQU              0x00400000  ;P0.22
+   23 00000000 40000000 
+                       LCD_LIGHT
+                               EQU              0x40000000  ;P0.30
+   24 00000000         
+   25 00000000 FF9FFFFF 
+                       SET0_DATA
+                               EQU              0xFF9FFFFF
+   26 00000000 FEFFFFFF 
+                       SET0_RS EQU              0xFEFFFFFF
+   27 00000000 FDFFFFFF 
+                       SET0_E  EQU              0xFDFFFFFF
+   28 00000000 FFBFFFFF 
+                       SET0_RW EQU              0xFFBFFFFF
+   29 00000000         
+   30 00000000 30003000 
+                       PINSEL1GPIO
+                               EQU              0x30003000  ;Mask to set pins 2
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            2 and 30 to GPIO
+   31 00000000 00000008 
+                       PINSEL2GPIO
+                               EQU              0x00000008  ;Mask to set pins 1
+                                                            .16-1.25 to GPIO
+   32 00000000         
+   33 00000000 40400000 
+                       IO0DIROUT
+                               EQU              0x40400000
+   34 00000000 03FF0000 
+                       IO1DIROUT
+                               EQU              0x03FF0000
+   35 00000000         
+   36 00000000         
+   37 00000000         
+   38 00000000 00300000 
+                       LCDWAKE EQU              0x300000    ;send 3 times
+   39 00000000 00380000 
+                       LCDISET EQU              0x380000
+   40 00000000 000C0000 
+                       LCD_ON  EQU              0x0C0000
+   41 00000000 00010000 
+                       LCDCLR  EQU              0x010000
+   42 00000000 00060000 
+                       AUTOR   EQU              0x060000
+   43 00000000         
+   44 00000000         ;delay values
+   45 00000000 00000025 
+                       WAIT_6us
+                               EQU              0x25
+   46 00000000 000000F1 
+                       WAIT_40us
+                               EQU              0xF1
+   47 00000000 00000259 
+                       WAIT_100us
+                               EQU              0x259
+   48 00000000 00006019 
+                       WAIT_4ms
+                               EQU              0x6019
+   49 00000000 00015F91 
+                       WAIT_15ms
+                               EQU              0x00015F91
+   50 00000000         
+   51 00000000         
+   52 00000000         ;-------------------------------------------------------
+                       -----------------
+   53 00000000                 IMPORT           DELAY
+   54 00000000                 IMPORT           LCD_cmd
+   55 00000000                 GLOBAL           user_code
+   56 00000000                 AREA             mycode,CODE,READONLY
+   57 00000000                 ENTRY
+   58 00000000         
+   59 00000000         user_code
+   60 00000000         
+   61 00000000         LCD_pins
+   62 00000000         
+   63 00000000 E59F00DC        LDR              r0,=PINSEL1
+   64 00000004 E5901000        LDR              r1,[r0]
+   65 00000008 E59F30D8        LDR              r3, =PINSEL1GPIO
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   66 0000000C E1C11003        BIC              r1,r1,r3
+   67 00000010 E5801000        STR              r1,[r0]
+   68 00000014         
+   69 00000014 E59F00D0        LDR              r0,=PINSEL2
+   70 00000018 E5901000        LDR              r1,[r0]
+   71 0000001C E3A03008        LDR              r3, =PINSEL2GPIO
+   72 00000020 E1C11003        BIC              r1,r1,r3
+   73 00000024 E5801000        STR              r1,[r0]
+   74 00000028         
+   75 00000028 E59F00C0        LDR              r0,=IO0DIR
+   76 0000002C E5901000        LDR              r1,[r0]
+   77 00000030 E59F30BC        LDR              r3, =IO0DIROUT
+   78 00000034 E1811003        ORR              r1,r1, r3
+   79 00000038 E5801000        STR              r1,[r0]
+   80 0000003C E59F00B4        LDR              r0,=IO1DIR
+   81 00000040 E5901000        LDR              r1,[r0]
+   82 00000044 E59F30B0        LDR              r3, =IO1DIROUT
+   83 00000048 E1811003        ORR              r1,r1,r3
+   84 0000004C E5801000        STR              r1,[r0]
+   85 00000050         
+   86 00000050         
+   87 00000050         LCDint
+   88 00000050         ;LDR r0,=LCD_E 
+   89 00000050         ;LDR r1,=LCD_RS 
+   90 00000050         ;LDR r2,=LCD_RW 
+   91 00000050         ;LDR r3,=LCD_DATA 
+   92 00000050         
+   93 00000050         
+   94 00000050         MORNING_ROUTINE                      ;STEP 1
+   95 00000050         
+   96 00000050 E9AD5FFF        STMFA            SP!, {r0 - r12, LR}
+   97 00000054 E10F1000        MRS              r1, CPSR
+   98 00000058         
+   99 00000058 E59F00A0        LDR              R0,=IO0PIN
+  100 0000005C E59F10A0        LDR              R1,=IO1PIN
+  101 00000060 E5902000        LDR              R2,[r0]
+  102 00000064 E5913000        LDR              R3,[r1]
+  103 00000068         
+  104 00000068 E3E04401        LDR              r4,=SET0_RS ;set RS = 0 
+  105 0000006C E0033004        AND              R3,R3,r4
+  106 00000070 E5813000        STR              R3,[R1]
+  107 00000074         
+  108 00000074         
+  109 00000074 E3E04402        LDR              r4,=SET0_E
+  110 00000078 E0033004        AND              R3,R3,r4
+  111 0000007C E5813000        STR              R3,[R1]
+  112 00000080         
+  113 00000080 E3E04501        LDR              r4,=SET0_RW
+  114 00000084 E0022004        AND              R2,R2,R4
+  115 00000088 E5802000        STR              r2,[r0]
+  116 0000008C         
+  117 0000008C E59F9074        LDR              r9,=WAIT_15ms
+  118 00000090 EBFFFFFE        BL               DELAY
+  119 00000094         ;step 2
+  120 00000094         
+  121 00000094 E3A04603        LDR              r4,=LCDWAKE
+  122 00000098 EBFFFFFE        BL               LCD_cmd
+  123 0000009C E59F9068        LDR              r9,=WAIT_4ms
+  124 000000A0 EBFFFFFE        BL               DELAY
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  125 000000A4         
+  126 000000A4         ;step 3
+  127 000000A4 E3A04603        LDR              r4,=LCDWAKE
+  128 000000A8 EBFFFFFE        BL               LCD_cmd
+  129 000000AC E59F905C        LDR              r9,=WAIT_100us
+  130 000000B0 EBFFFFFE        BL               DELAY
+  131 000000B4         
+  132 000000B4         ;step 4
+  133 000000B4 E3A04603        LDR              r4,=LCDWAKE
+  134 000000B8 EBFFFFFE        BL               LCD_cmd
+  135 000000BC E59F9048        LDR              r9,=WAIT_4ms
+  136 000000C0 EBFFFFFE        BL               DELAY
+  137 000000C4         
+  138 000000C4         ;step 5
+  139 000000C4 E3A0470E        LDR              r4,=LCDISET
+  140 000000C8 EBFFFFFE        BL               LCD_cmd
+  141 000000CC         
+  142 000000CC         ;step 6
+  143 000000CC E3A04703        LDR              r4,=LCD_ON
+  144 000000D0 EBFFFFFE        BL               LCD_cmd
+  145 000000D4         
+  146 000000D4         ;step 7
+  147 000000D4 E3A04801        LDR              r4,=LCDCLR
+  148 000000D8 EBFFFFFE        BL               LCD_cmd
+  149 000000DC         
+  150 000000DC         ;step 8
+  151 000000DC E3A04806        LDR              r4,=AUTOR
+  152 000000E0 EBFFFFFE        BL               LCD_cmd
+  153 000000E4         
+  154 000000E4         ;LCDWAKE EQU 0x300000 ;send 3 times
+  155 000000E4         ;LCDISET EQU 0x380000
+  156 000000E4         ;LCD_ON EQU 0x0C0000
+  157 000000E4         ;LCDCLR EQU 0x010000
+  158 000000E4         ;AUTOR EQU 0x060000
+  159 000000E4         ;AND r4,r4,#0x0 ; E = RS = RW = 0, and wait for at least
+                        15ms
+  160 000000E4         ;AND r5,r5,#0x0
+  161 000000E4         ;AND r6,r6,#0x0
+  162 000000E4         ;STR r4,[r0] ;E=RS=RW=0
+  163 000000E4         ;STR r5,[r1]
+  164 000000E4         ;STR r6,[r2]
+  165 000000E4         
+  166 000000E4         ;LCD_DATA EQU 0x00FF0000 ;P1.16 - P1.23 Send info
+  167 000000E4         ;LCD_RS EQU 0x01000000  ;p1.24 0=CMD 1=CHAR interpretati
+                       on
+  168 000000E4         ;LCD_E EQU 0x02000000  ;p1.25 Crank 1->0 to execute
+  169 000000E4         ;LCD_RW EQU 0x00400000  ;P0.22
+  170 000000E4         ;LCD_LIGHT EQU 0x40000000 ;P0.30
+  171 000000E4         ;IO0PIN EQU 0xE0028000
+  172 000000E4         ;IO1PIN EQU 0xE0028010
+  173 000000E4         
+  174 000000E4         
+  175 000000E4         
+  176 000000E4         
+  177 000000E4         
+  178 000000E4         
+  179 000000E4         ;BX LR
+  180 000000E4         
+  181 000000E4         
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  182 000000E4                 END
+              E002C004 
+              30003000 
+              E002C014 
+              E0028008 
+              40400000 
+              E0028018 
+              03FF0000 
+              E0028000 
+              E0028010 
+              00015F91 
+              00006019 
+              00000259 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\lab9.d -o.\objects\lab9.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMS
+IS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine
+="__UVISION_VERSION SETA 524" --list=.\listings\lab9.lst lab9.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+LCD_pins 00000000
+
+Symbol: LCD_pins
+   Definitions
+      At line 61 in file lab9.s
+   Uses
+      None
+Comment: LCD_pins unused
+LCDint 00000050
+
+Symbol: LCDint
+   Definitions
+      At line 87 in file lab9.s
+   Uses
+      None
+Comment: LCDint unused
+MORNING_ROUTINE 00000050
+
+Symbol: MORNING_ROUTINE
+   Definitions
+      At line 94 in file lab9.s
+   Uses
+      None
+Comment: MORNING_ROUTINE unused
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 56 in file lab9.s
+   Uses
+      None
+Comment: mycode unused
+user_code 00000000
+
+Symbol: user_code
+   Definitions
+      At line 59 in file lab9.s
+   Uses
+      At line 55 in file lab9.s
+Comment: user_code used once
+5 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+AUTOR 00060000
+
+Symbol: AUTOR
+   Definitions
+      At line 42 in file lab9.s
+   Uses
+      At line 151 in file lab9.s
+Comment: AUTOR used once
+IO0CLR E002800C
+
+Symbol: IO0CLR
+   Definitions
+      At line 10 in file lab9.s
+   Uses
+      None
+Comment: IO0CLR unused
+IO0DIR E0028008
+
+Symbol: IO0DIR
+   Definitions
+      At line 6 in file lab9.s
+   Uses
+      At line 75 in file lab9.s
+Comment: IO0DIR used once
+IO0DIROUT 40400000
+
+Symbol: IO0DIROUT
+   Definitions
+      At line 33 in file lab9.s
+   Uses
+      At line 77 in file lab9.s
+Comment: IO0DIROUT used once
+IO0PIN E0028000
+
+Symbol: IO0PIN
+   Definitions
+      At line 15 in file lab9.s
+   Uses
+      At line 99 in file lab9.s
+Comment: IO0PIN used once
+IO0SET E0028004
+
+Symbol: IO0SET
+   Definitions
+      At line 9 in file lab9.s
+   Uses
+      None
+Comment: IO0SET unused
+IO1CLR E002801C
+
+Symbol: IO1CLR
+   Definitions
+      At line 13 in file lab9.s
+   Uses
+      None
+Comment: IO1CLR unused
+IO1DIR E0028018
+
+Symbol: IO1DIR
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 7 in file lab9.s
+   Uses
+      At line 80 in file lab9.s
+Comment: IO1DIR used once
+IO1DIROUT 03FF0000
+
+Symbol: IO1DIROUT
+   Definitions
+      At line 34 in file lab9.s
+   Uses
+      At line 82 in file lab9.s
+Comment: IO1DIROUT used once
+IO1PIN E0028010
+
+Symbol: IO1PIN
+   Definitions
+      At line 16 in file lab9.s
+   Uses
+      At line 100 in file lab9.s
+Comment: IO1PIN used once
+IO1SET E0028014
+
+Symbol: IO1SET
+   Definitions
+      At line 12 in file lab9.s
+   Uses
+      None
+Comment: IO1SET unused
+LCDCLR 00010000
+
+Symbol: LCDCLR
+   Definitions
+      At line 41 in file lab9.s
+   Uses
+      At line 147 in file lab9.s
+Comment: LCDCLR used once
+LCDISET 00380000
+
+Symbol: LCDISET
+   Definitions
+      At line 39 in file lab9.s
+   Uses
+      At line 139 in file lab9.s
+Comment: LCDISET used once
+LCDWAKE 00300000
+
+Symbol: LCDWAKE
+   Definitions
+      At line 38 in file lab9.s
+   Uses
+      At line 121 in file lab9.s
+      At line 127 in file lab9.s
+      At line 133 in file lab9.s
+
+LCD_DATA 00FF0000
+
+Symbol: LCD_DATA
+   Definitions
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 19 in file lab9.s
+   Uses
+      None
+Comment: LCD_DATA unused
+LCD_E 02000000
+
+Symbol: LCD_E
+   Definitions
+      At line 21 in file lab9.s
+   Uses
+      None
+Comment: LCD_E unused
+LCD_LIGHT 40000000
+
+Symbol: LCD_LIGHT
+   Definitions
+      At line 23 in file lab9.s
+   Uses
+      None
+Comment: LCD_LIGHT unused
+LCD_ON 000C0000
+
+Symbol: LCD_ON
+   Definitions
+      At line 40 in file lab9.s
+   Uses
+      At line 143 in file lab9.s
+Comment: LCD_ON used once
+LCD_RS 01000000
+
+Symbol: LCD_RS
+   Definitions
+      At line 20 in file lab9.s
+   Uses
+      None
+Comment: LCD_RS unused
+LCD_RW 00400000
+
+Symbol: LCD_RW
+   Definitions
+      At line 22 in file lab9.s
+   Uses
+      None
+Comment: LCD_RW unused
+PINSEL0 E002C000
+
+Symbol: PINSEL0
+   Definitions
+      At line 2 in file lab9.s
+   Uses
+      None
+Comment: PINSEL0 unused
+PINSEL1 E002C004
+
+Symbol: PINSEL1
+   Definitions
+      At line 3 in file lab9.s
+   Uses
+      At line 63 in file lab9.s
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: PINSEL1 used once
+PINSEL1GPIO 30003000
+
+Symbol: PINSEL1GPIO
+   Definitions
+      At line 30 in file lab9.s
+   Uses
+      At line 65 in file lab9.s
+Comment: PINSEL1GPIO used once
+PINSEL2 E002C014
+
+Symbol: PINSEL2
+   Definitions
+      At line 4 in file lab9.s
+   Uses
+      At line 69 in file lab9.s
+Comment: PINSEL2 used once
+PINSEL2GPIO 00000008
+
+Symbol: PINSEL2GPIO
+   Definitions
+      At line 31 in file lab9.s
+   Uses
+      At line 71 in file lab9.s
+Comment: PINSEL2GPIO used once
+SET0_DATA FF9FFFFF
+
+Symbol: SET0_DATA
+   Definitions
+      At line 25 in file lab9.s
+   Uses
+      None
+Comment: SET0_DATA unused
+SET0_E FDFFFFFF
+
+Symbol: SET0_E
+   Definitions
+      At line 27 in file lab9.s
+   Uses
+      At line 109 in file lab9.s
+Comment: SET0_E used once
+SET0_RS FEFFFFFF
+
+Symbol: SET0_RS
+   Definitions
+      At line 26 in file lab9.s
+   Uses
+      At line 104 in file lab9.s
+Comment: SET0_RS used once
+SET0_RW FFBFFFFF
+
+Symbol: SET0_RW
+   Definitions
+      At line 28 in file lab9.s
+   Uses
+      At line 113 in file lab9.s
+Comment: SET0_RW used once
+WAIT_100us 00000259
+
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: WAIT_100us
+   Definitions
+      At line 47 in file lab9.s
+   Uses
+      At line 129 in file lab9.s
+Comment: WAIT_100us used once
+WAIT_15ms 00015F91
+
+Symbol: WAIT_15ms
+   Definitions
+      At line 49 in file lab9.s
+   Uses
+      At line 117 in file lab9.s
+Comment: WAIT_15ms used once
+WAIT_40us 000000F1
+
+Symbol: WAIT_40us
+   Definitions
+      At line 46 in file lab9.s
+   Uses
+      None
+Comment: WAIT_40us unused
+WAIT_4ms 00006019
+
+Symbol: WAIT_4ms
+   Definitions
+      At line 48 in file lab9.s
+   Uses
+      At line 123 in file lab9.s
+      At line 135 in file lab9.s
+
+WAIT_6us 00000025
+
+Symbol: WAIT_6us
+   Definitions
+      At line 45 in file lab9.s
+   Uses
+      None
+Comment: WAIT_6us unused
+34 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+DELAY 00000000
+
+Symbol: DELAY
+   Definitions
+      At line 53 in file lab9.s
+   Uses
+      At line 118 in file lab9.s
+      At line 124 in file lab9.s
+      At line 130 in file lab9.s
+      At line 136 in file lab9.s
+
+LCD_cmd 00000000
+
+Symbol: LCD_cmd
+   Definitions
+      At line 54 in file lab9.s
+   Uses
+      At line 122 in file lab9.s
+      At line 128 in file lab9.s
+      At line 134 in file lab9.s
+      At line 140 in file lab9.s
+      At line 144 in file lab9.s
+      At line 148 in file lab9.s
+      At line 152 in file lab9.s
+
+2 symbols
+375 symbols in table

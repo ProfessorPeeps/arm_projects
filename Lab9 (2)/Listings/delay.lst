@@ -1,0 +1,108 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 IMPORT           lcd_subs
+    2 00000000         
+    3 00000000         ;delay value (7 clk cyc / 12e6 Hz)
+    4 00000000         
+    5 00000000 0000001E 
+                       TEN_us  EQU              30          ;wait 10 us (12e6 H
+                                                            z / 6 instructions)
+                                                            
+    6 00000000         
+    7 00000000                 GLOBAL           DELAY
+    8 00000000                 AREA             mycode,CODE,READONLY
+    9 00000000         
+   10 00000000         DELAY
+   11 00000000         ;**Stack stuff
+   12 00000000 E92D4003        STMFD            SP!, {r0 - r1, LR}
+   13 00000004 E10F1000        MRS              r1, CPSR
+   14 00000008 E92D0002        STMFD            SP!, {r1}
+   15 0000000C         
+   16 0000000C         
+   17 0000000C E3A0101E        LDR              r1, =TEN_us ;delay in increment
+                                                            s of 10us 
+   18 00000010 E0010190        MUL              r1, r0, r1  ;increment by 10us
+   19 00000014         
+   20 00000014         wait
+   21 00000014 E2511001        SUBS             r1, r1, #1  ;loop delay until d
+                                                            one 
+   22 00000018 1AFFFFFD        BNE              wait
+   23 0000001C         
+   24 0000001C         ;**Stack stuff
+   25 0000001C E8BD0002        LDMFD            SP!, {r1}
+   26 00000020 E128F001        MSR              CPSR_f, r1
+   27 00000024 E8BD4003        LDMFD            SP!, {r0 - r1, LR}
+   28 00000028         
+   29 00000028 E12FFF1E        BX               LR          ;return to main 
+   30 0000002C         
+   31 0000002C                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\delay.d -o.\objects\delay.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\C
+MSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefi
+ne="__UVISION_VERSION SETA 524" --list=.\listings\delay.lst delay.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DELAY 00000000
+
+Symbol: DELAY
+   Definitions
+      At line 10 in file delay.s
+   Uses
+      At line 7 in file delay.s
+Comment: DELAY used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 8 in file delay.s
+   Uses
+      None
+Comment: mycode unused
+wait 00000014
+
+Symbol: wait
+   Definitions
+      At line 20 in file delay.s
+   Uses
+      At line 22 in file delay.s
+Comment: wait used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+TEN_us 0000001E
+
+Symbol: TEN_us
+   Definitions
+      At line 5 in file delay.s
+   Uses
+      At line 17 in file delay.s
+Comment: TEN_us used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+lcd_subs 00000000
+
+Symbol: lcd_subs
+   Definitions
+      At line 1 in file delay.s
+   Uses
+      None
+Comment: lcd_subs unused
+1 symbol
+337 symbols in table

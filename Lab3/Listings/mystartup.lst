@@ -1,0 +1,234 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             RESET,CODE,READONLY
+    2 00000000                 ENTRY
+    3 00000000         VECTORS
+    4 00000000 E59FF018        LDR              PC,Reset_Addr
+    5 00000004 E59FF018        LDR              PC,Undef_Addr
+    6 00000008 E59FF018        LDR              PC,SWI_Addr
+    7 0000000C E59FF018        LDR              PC,PAbt_Addr
+    8 00000010 E59FF018        LDR              PC,DAbt_Addr
+    9 00000014 E1A00000        NOP
+   10 00000018 E59FF018        LDR              PC,IRQ_Addr
+   11 0000001C E59FF018        LDR              PC,FIQ_Addr
+   12 00000020         
+   13 00000020 00000000 
+                       Reset_Addr
+                               DCD              Reset_Handler
+   14 00000024 00000000 
+                       Undef_Addr
+                               DCD              UndefHandler
+   15 00000028 00000000 
+                       SWI_Addr
+                               DCD              SWIHandler
+   16 0000002C 00000000 
+                       PAbt_Addr
+                               DCD              PAbtHandler
+   17 00000030 00000000 
+                       DAbt_Addr
+                               DCD              DAbtHandler
+   18 00000034 00000000        DCD              0
+   19 00000038         
+   20 00000038 00000000 
+                       IRQ_Addr
+                               DCD              IRQHandler
+   21 0000003C 00000000 
+                       FIQ_Addr
+                               DCD              FIQHandler
+   22 00000040 EAFFFFFE 
+                       SWIHandler
+                               B                SWIHandler
+   23 00000044 EAFFFFFE 
+                       PAbtHandler
+                               B                PAbtHandler
+   24 00000048 EAFFFFFE 
+                       DAbtHandler
+                               B                DAbtHandler
+   25 0000004C EAFFFFFE 
+                       IRQHandler
+                               B                IRQHandler
+   26 00000050 EAFFFFFE 
+                       FIQHandler
+                               B                FIQHandler
+   27 00000054 EAFFFFFE 
+                       UndefHandler
+                               B                UndefHandler
+   28 00000058         
+   29 00000058                 IMPORT           Reset_Handler
+   30 00000058                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\mystartup.d -o.\objects\mystartup.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_
+v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" -
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+-predefine="__UVISION_VERSION SETA 524" --list=.\listings\mystartup.lst mystart
+up.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DAbtHandler 00000048
+
+Symbol: DAbtHandler
+   Definitions
+      At line 24 in file mystartup.s
+   Uses
+      At line 17 in file mystartup.s
+      At line 24 in file mystartup.s
+
+DAbt_Addr 00000030
+
+Symbol: DAbt_Addr
+   Definitions
+      At line 17 in file mystartup.s
+   Uses
+      At line 8 in file mystartup.s
+Comment: DAbt_Addr used once
+FIQHandler 00000050
+
+Symbol: FIQHandler
+   Definitions
+      At line 26 in file mystartup.s
+   Uses
+      At line 21 in file mystartup.s
+      At line 26 in file mystartup.s
+
+FIQ_Addr 0000003C
+
+Symbol: FIQ_Addr
+   Definitions
+      At line 21 in file mystartup.s
+   Uses
+      At line 11 in file mystartup.s
+Comment: FIQ_Addr used once
+IRQHandler 0000004C
+
+Symbol: IRQHandler
+   Definitions
+      At line 25 in file mystartup.s
+   Uses
+      At line 20 in file mystartup.s
+      At line 25 in file mystartup.s
+
+IRQ_Addr 00000038
+
+Symbol: IRQ_Addr
+   Definitions
+      At line 20 in file mystartup.s
+   Uses
+      At line 10 in file mystartup.s
+Comment: IRQ_Addr used once
+PAbtHandler 00000044
+
+Symbol: PAbtHandler
+   Definitions
+      At line 23 in file mystartup.s
+   Uses
+      At line 16 in file mystartup.s
+      At line 23 in file mystartup.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+
+PAbt_Addr 0000002C
+
+Symbol: PAbt_Addr
+   Definitions
+      At line 16 in file mystartup.s
+   Uses
+      At line 7 in file mystartup.s
+Comment: PAbt_Addr used once
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 1 in file mystartup.s
+   Uses
+      None
+Comment: RESET unused
+Reset_Addr 00000020
+
+Symbol: Reset_Addr
+   Definitions
+      At line 13 in file mystartup.s
+   Uses
+      At line 4 in file mystartup.s
+Comment: Reset_Addr used once
+SWIHandler 00000040
+
+Symbol: SWIHandler
+   Definitions
+      At line 22 in file mystartup.s
+   Uses
+      At line 15 in file mystartup.s
+      At line 22 in file mystartup.s
+
+SWI_Addr 00000028
+
+Symbol: SWI_Addr
+   Definitions
+      At line 15 in file mystartup.s
+   Uses
+      At line 6 in file mystartup.s
+Comment: SWI_Addr used once
+UndefHandler 00000054
+
+Symbol: UndefHandler
+   Definitions
+      At line 27 in file mystartup.s
+   Uses
+      At line 14 in file mystartup.s
+      At line 27 in file mystartup.s
+
+Undef_Addr 00000024
+
+Symbol: Undef_Addr
+   Definitions
+      At line 14 in file mystartup.s
+   Uses
+      At line 5 in file mystartup.s
+Comment: Undef_Addr used once
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+VECTORS 00000000
+
+Symbol: VECTORS
+   Definitions
+      At line 3 in file mystartup.s
+   Uses
+      None
+Comment: VECTORS unused
+15 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 29 in file mystartup.s
+   Uses
+      At line 13 in file mystartup.s
+Comment: Reset_Handler used once
+1 symbol
+348 symbols in table

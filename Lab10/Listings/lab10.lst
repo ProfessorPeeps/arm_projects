@@ -1,0 +1,104 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;-------------------------------------------------------
+                       ------
+    2 00000000         
+    3 00000000                 GLOBAL           user_code
+    4 00000000         
+    5 00000000                 IMPORT           EINT
+    6 00000000                 IMPORT           ISR_SUB
+    7 00000000                 IMPORT           LED_delay
+    8 00000000         
+    9 00000000                 AREA             mycode,CODE,READONLY
+   10 00000000                 ENTRY
+   11 00000000         
+   12 00000000         user_code
+   13 00000000         
+   14 00000000         ;Call a software interrupt (task 2 and 3)
+   15 00000000 EF000001        SWI              #1
+   16 00000004         
+   17 00000004 EBFFFFFE        BL               LED_delay   ;call a delay withi
+                                                            n each subroutine
+   18 00000008         
+   19 00000008 EF000002        SWI              #2
+   20 0000000C         
+   21 0000000C EBFFFFFE        BL               LED_delay
+   22 00000010         
+   23 00000010 EF000003        SWI              #3
+   24 00000014         
+   25 00000014 EAFFFFFE 
+                       stop    B                stop
+   26 00000018         
+   27 00000018                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\lab10.d -o.\objects\lab10.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\C
+MSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefi
+ne="__UVISION_VERSION SETA 524" --list=.\listings\lab10.lst lab10.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 9 in file lab10.s
+   Uses
+      None
+Comment: mycode unused
+stop 00000014
+
+Symbol: stop
+   Definitions
+      At line 25 in file lab10.s
+   Uses
+      At line 25 in file lab10.s
+Comment: stop used once
+user_code 00000000
+
+Symbol: user_code
+   Definitions
+      At line 12 in file lab10.s
+   Uses
+      At line 3 in file lab10.s
+Comment: user_code used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+EINT 00000000
+
+Symbol: EINT
+   Definitions
+      At line 5 in file lab10.s
+   Uses
+      None
+Comment: EINT unused
+ISR_SUB 00000000
+
+Symbol: ISR_SUB
+   Definitions
+      At line 6 in file lab10.s
+   Uses
+      None
+Comment: ISR_SUB unused
+LED_delay 00000000
+
+Symbol: LED_delay
+   Definitions
+      At line 7 in file lab10.s
+   Uses
+      At line 17 in file lab10.s
+      At line 21 in file lab10.s
+
+3 symbols
+338 symbols in table

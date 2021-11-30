@@ -1,0 +1,109 @@
+Component: ARM Compiler 5.06 update 5 (build 528) Tool: armlink [4d35e2]
+
+==============================================================================
+
+Section Cross References
+
+    mystartup.o(RESET) refers to lab7.o(mycode) for user_code
+
+
+==============================================================================
+
+Removing Unused input sections from the image.
+
+    Removing lab7.o(mydata), (16 bytes).
+
+1 unused section(s) (total 16 bytes) removed from the image.
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    RESET                                    0x00000000   Section      160  mystartup.o(RESET)
+    lab7.s                                   0x00000000   Number         0  lab7.o ABSOLUTE
+    mystartup.s                              0x00000000   Number         0  mystartup.o ABSOLUTE
+    SWIHandler                               0x00000040   ARM Code       4  mystartup.o(RESET)
+    PAbtHandler                              0x00000044   ARM Code       4  mystartup.o(RESET)
+    DAbtHandler                              0x00000048   ARM Code       4  mystartup.o(RESET)
+    IRQHandler                               0x0000004c   ARM Code       4  mystartup.o(RESET)
+    FIQHandler                               0x00000050   ARM Code       4  mystartup.o(RESET)
+    UndefHandler                             0x00000054   ARM Code       4  mystartup.o(RESET)
+    mycode                                   0x000000a0   Section      260  lab7.o(mycode)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv1$ARM_ISAv4$S$PE$A:L22$X:L11$S22$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    user_code                                0x000000a0   ARM Code       0  lab7.o(mycode)
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x00000000
+
+  Load Region LR_1 (Base: 0x00000000, Size: 0x000001a4, Max: 0xffffffff, ABSOLUTE)
+
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x000001a4, Max: 0xffffffff, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x00000000   0x00000000   0x000000a0   Code   RO            7  * RESET               mystartup.o
+    0x000000a0   0x000000a0   0x00000104   Code   RO            1    mycode              lab7.o
+
+
+    Execution Region ER_RW (Exec base: 0x40000000, Load base: 0x000001a4, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+    Execution Region ER_ZI (Exec base: 0x40000000, Load base: 0x000001a4, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+       260         28          0          0          0        280   lab7.o
+       160         48          0          0          0        240   mystartup.o
+
+    ----------------------------------------------------------------------
+       420         76          0          0          0        520   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+       420         76          0          0          0        520   Grand Totals
+       420         76          0          0          0        520   ELF Image Totals
+       420         76          0          0          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                  420 (   0.41kB)
+    Total RW  Size (RW Data + ZI Data)                 0 (   0.00kB)
+    Total ROM Size (Code + RO Data + RW Data)        420 (   0.41kB)
+
+==============================================================================
+

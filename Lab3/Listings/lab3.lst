@@ -1,0 +1,234 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 GLOBAL           Reset_Handler
+    2 00000000 000000EF 
+                       VAL1    EQU              0xEF
+    3 00000000 000000AB 
+                       VAL2    EQU              0xAB
+    4 00000000 33221100 
+                       VAL3    EQU              0x33221100
+    5 00000000 FFEEDDCC 
+                       VAL4    EQU              0XFFEEDDCC
+    6 00000000 40000000 
+                       ADDR1   EQU              0x40000000
+    7 00000000 40000004 
+                       ADDR2   EQU              0x40000004
+    8 00000000 40000008 
+                       ADDR3   EQU              0x40000008
+    9 00000000 4000000C 
+                       ADDR4   EQU              0X4000000C
+   10 00000000 40000010 
+                       ADDR5   EQU              0x40000010
+   11 00000000 40000014 
+                       ADDR6   EQU              0X40000014
+   12 00000000                 AREA             mycode,CODE,READONLY
+   13 00000000         
+   14 00000000         Reset_Handler                        ;this label is nece
+                                                            ssary for Startup t
+                                                            o find
+   15 00000000         
+   16 00000000         ; TASK 1
+   17 00000000         
+   18 00000000         ;place 2 values into registers
+   19 00000000 E3A000EF        LDR              R0,=VAL1
+   20 00000004 E3A010AB        LDR              R1,=VAL2
+   21 00000008         ;move registers to the 2 adresses
+   22 00000008 E3A02101        mov              R2, #ADDR1
+   23 0000000C E3A03111        mov              R3, #ADDR2
+   24 00000010         ;store the 2 values at adress 
+   25 00000010 E5820000        STR              R0,[R2]
+   26 00000014 E5831000        STR              R1,[R3]
+   27 00000018         
+   28 00000018         ; TASK 2
+   29 00000018         
+   30 00000018         ;place 2 values into registers
+   31 00000018 E59F4038        LDR              R4, =VAL3
+   32 0000001C E59F5038        LDR              R5, =VAL4
+   33 00000020         ;move registers to the 2 adresses
+   34 00000020 E3A06121        mov              R6, #ADDR3
+   35 00000024 E3A07131        mov              R7, #ADDR4
+   36 00000028         ;store the 2 values at adress 
+   37 00000028 E5864000        STR              R4,[R6]
+   38 0000002C E5875000        STR              R5,[R7]
+   39 00000030         
+   40 00000030         ; TASK 3
+   41 00000030 E59F8018        LDR              R8,TABLE
+   42 00000034 E3A09141        MOV              R9,#ADDR5
+   43 00000038 E5898000        STR              R8, [R9]
+   44 0000003C         
+   45 0000003C E28FA00C        ADR              R10, TABLE
+   46 00000040 E59AC004        LDR              R12, [R10,#4]
+   47 00000044 E3A0B151        MOV              R11,#ADDR6
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   48 00000048 E58BC000        STR              R12, [R11]
+   49 0000004C         
+   50 0000004C         ; TASK 3 - OPTIMIZED
+   51 0000004C         
+   52 0000004C         ;ADR R0,TABLE
+   53 0000004C         ;MOV R1,#ADDR1
+   54 0000004C         ;STR R0, [R1]
+   55 0000004C         
+   56 0000004C         ;LDR R4, [R0,#4]
+   57 0000004C         ;MOV R3,#ADDR2
+   58 0000004C         ;STR R4, [R3]
+   59 0000004C         
+   60 0000004C EAFFFFFE 
+                       stop    B                stop        ;endless loop to ma
+                                                            ke the program hang
+                                                            
+   61 00000050         
+   62 00000050 12345678 
+              FEDCBA98 TABLE   DCD              0x12345678, 0xFEDCBA98
+   63 00000058         
+   64 00000058                 END                          ;assembler directiv
+                                                            e to indicate the e
+                                                            nd of code
+              33221100 
+              FFEEDDCC 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\lab3.d -o.\objects\lab3.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMS
+IS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine
+="__UVISION_VERSION SETA 524" --list=.\listings\lab3.lst lab3.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 14 in file lab3.s
+   Uses
+      At line 1 in file lab3.s
+Comment: Reset_Handler used once
+TABLE 00000050
+
+Symbol: TABLE
+   Definitions
+      At line 62 in file lab3.s
+   Uses
+      At line 41 in file lab3.s
+      At line 45 in file lab3.s
+
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 12 in file lab3.s
+   Uses
+      None
+Comment: mycode unused
+stop 0000004C
+
+Symbol: stop
+   Definitions
+      At line 60 in file lab3.s
+   Uses
+      At line 60 in file lab3.s
+Comment: stop used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+ADDR1 40000000
+
+Symbol: ADDR1
+   Definitions
+      At line 6 in file lab3.s
+   Uses
+      At line 22 in file lab3.s
+Comment: ADDR1 used once
+ADDR2 40000004
+
+Symbol: ADDR2
+   Definitions
+      At line 7 in file lab3.s
+   Uses
+      At line 23 in file lab3.s
+Comment: ADDR2 used once
+ADDR3 40000008
+
+Symbol: ADDR3
+   Definitions
+      At line 8 in file lab3.s
+   Uses
+      At line 34 in file lab3.s
+Comment: ADDR3 used once
+ADDR4 4000000C
+
+Symbol: ADDR4
+   Definitions
+      At line 9 in file lab3.s
+   Uses
+      At line 35 in file lab3.s
+Comment: ADDR4 used once
+ADDR5 40000010
+
+Symbol: ADDR5
+   Definitions
+      At line 10 in file lab3.s
+   Uses
+      At line 42 in file lab3.s
+Comment: ADDR5 used once
+ADDR6 40000014
+
+Symbol: ADDR6
+   Definitions
+      At line 11 in file lab3.s
+   Uses
+      At line 47 in file lab3.s
+Comment: ADDR6 used once
+VAL1 000000EF
+
+Symbol: VAL1
+   Definitions
+      At line 2 in file lab3.s
+   Uses
+      At line 19 in file lab3.s
+Comment: VAL1 used once
+VAL2 000000AB
+
+Symbol: VAL2
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 3 in file lab3.s
+   Uses
+      At line 20 in file lab3.s
+Comment: VAL2 used once
+VAL3 33221100
+
+Symbol: VAL3
+   Definitions
+      At line 4 in file lab3.s
+   Uses
+      At line 31 in file lab3.s
+Comment: VAL3 used once
+VAL4 FFEEDDCC
+
+Symbol: VAL4
+   Definitions
+      At line 5 in file lab3.s
+   Uses
+      At line 32 in file lab3.s
+Comment: VAL4 used once
+10 symbols
+348 symbols in table

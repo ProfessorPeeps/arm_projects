@@ -1,0 +1,896 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;-------------------------------------------------------
+                       -------------   
+    2 00000000         ;Memory Accelerator Registers
+    3 00000000 E01FC000 
+                       MAMCR   EQU              0xE01FC000
+    4 00000000 E01FC004 
+                       MAMTIM  EQU              0xE01FC004
+    5 00000000         
+    6 00000000         ;Mode bits
+    7 00000000 00000010 
+                       MODE_USR
+                               EQU              0x10        ;User mode
+    8 00000000 00000011 
+                       MODE_FIQ
+                               EQU              0x11        ;FIQ mode
+    9 00000000 00000012 
+                       MODE_IRQ
+                               EQU              0x12        ;IRQ mode
+   10 00000000 00000013 
+                       MODE_SVC
+                               EQU              0x13        ;Supervisor mode
+   11 00000000 00000017 
+                       MODE_ABT
+                               EQU              0x17        ;Abort mode
+   12 00000000 0000001B 
+                       MODE_UND
+                               EQU              0x1B        ;Undefined mode
+   13 00000000 0000001F 
+                       MODE_SYS
+                               EQU              0x1F        ;System mode
+   14 00000000         
+   15 00000000         ;Interrupt Bits
+   16 00000000 00000080 
+                       I_Bit   EQU              0x80        ;when I bit set, IR
+                                                            Q disabled
+   17 00000000 00000040 
+                       F_Bit   EQU              0x40        ;when F bit set, FI
+                                                            Q disabled
+   18 00000000         
+   19 00000000         ;-------------------------------------------------------
+                       ----------------------
+   20 00000000         ;Stack stuff
+   21 00000000 40000000 
+                       SRAM_BASE
+                               EQU              0x40000000
+   22 00000000         
+   23 00000000 00000100 
+                       USR_Stack_Size
+                               EQU              0x100
+   24 00000000 00000200 
+                       FIQ_Stack_Size
+                               EQU              0x200
+   25 00000000 00000300 
+                       IRQ_Stack_Size
+                               EQU              0x300
+   26 00000000 00000400 
+                       SVC_Stack_Size
+                               EQU              0x400
+   27 00000000 00000500 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                       ABT_Stack_Size
+                               EQU              0x500
+   28 00000000 00000600 
+                       UND_Stack_Size
+                               EQU              0x600
+   29 00000000         ;SYS_Stack_Size EQU 0x700  
+   30 00000000         
+   31 00000000         ;-------------------------------------------------------
+                       -----------------------
+   32 00000000         ;External Interrupt Stuff
+   33 00000000 E002C004 
+                       PINSEL1 EQU              0xE002C004
+   34 00000000 E0028000 
+                       IO0DIR  EQU              0xE0028000
+   35 00000000         
+   36 00000000         ;EINT Address 
+   37 00000000 E01FC140 
+                       EXTINT  EQU              0xE01FC140  ;address for EINTX
+   38 00000000 E01FC148 
+                       EXTMODE EQU              0xE01FC148  ;address for level 
+                                                            / edge
+   39 00000000 E01FC14C 
+                       EXTPOLAR
+                               EQU              0xE01FC14C  ;address for rising
+                                                             /trailing
+   40 00000000 00004000 
+                       EINT0   EQU              0x4000
+   41 00000000         
+   42 00000000         ;-------------------------------------------------------
+                       -----------------------
+   43 00000000         ;VIC Stuff
+   44 00000000 FFFFF00C 
+                       VICIntSelect
+                               EQU              0xFFFFF00C
+   45 00000000 FFFFF010 
+                       VICIntEnable
+                               EQU              0xFFFFF010
+   46 00000000 FFFFF014 
+                       VICIntEnClear
+                               EQU              0xFFFFF014
+   47 00000000         
+   48 00000000         ;-------------------------------------------------------
+                       -----------------------
+   49 00000000         ;masks for LEDS task
+   50 00000000 0000FF00 
+                       LED_ALL EQU              0xFF00
+   51 00000000 0000AA00 
+                       LED_ALT EQU              0xAA00
+   52 00000000 00000F00 
+                       LED_FOUR
+                               EQU              0x0F00
+   53 00000000         ;-------------------------------------------------------
+                       ----------------------- 
+   54 00000000         
+   55 00000000                 GLOBAL           ISR_SUB
+   56 00000000         
+   57 00000000                 IMPORT           user_code
+   58 00000000                 IMPORT           LEDs
+   59 00000000                 IMPORT           lcd_subs
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   60 00000000                 IMPORT           DELAY
+   61 00000000                 IMPORT           LED_delay
+   62 00000000                 IMPORT           EINT
+   63 00000000         
+   64 00000000                 AREA             RESET,CODE,READONLY
+   65 00000000                 ENTRY
+   66 00000000                 ARM
+   67 00000000         
+   68 00000000         VECTORS
+   69 00000000 E59FF018        LDR              PC,Reset_Addr
+   70 00000004 E59FF018        LDR              PC,Undef_Addr
+   71 00000008 E59FF018        LDR              PC,SWI_Addr
+   72 0000000C E59FF018        LDR              PC,PAbt_Addr
+   73 00000010 E59FF018        LDR              PC,DAbt_Addr
+   74 00000014 E1A00000        NOP
+   75 00000018 E59FF018        LDR              PC,IRQ_Addr ;LDR PC, [PC, #-0x0
+                                                            FF0] vectored inter
+                                                            rupt
+   76 0000001C E59FF018        LDR              PC,FIQ_Addr
+   77 00000020         
+   78 00000020 00000000 
+                       Reset_Addr
+                               DCD              Reset_Handler
+   79 00000024 00000000 
+                       Undef_Addr
+                               DCD              UndefHandler
+   80 00000028 00000000 
+                       SWI_Addr
+                               DCD              SWIHandler  ;SWI interrupt
+   81 0000002C 00000000 
+                       PAbt_Addr
+                               DCD              PAbtHandler
+   82 00000030 00000000 
+                       DAbt_Addr
+                               DCD              DAbtHandler
+   83 00000034 00000000        DCD              0
+   84 00000038 00000000 
+                       IRQ_Addr
+                               DCD              IRQHandler
+   85 0000003C 00000000 
+                       FIQ_Addr
+                               DCD              FIQHandler
+   86 00000040         
+   87 00000040 EAFFFFFE 
+                       PAbtHandler
+                               B                PAbtHandler
+   88 00000044 EAFFFFFE 
+                       DAbtHandler
+                               B                DAbtHandler
+   89 00000048 EAFFFFFE 
+                       IRQHandler
+                               B                ISR_SUB     ;IRQ interrupt
+   90 0000004C EAFFFFFE 
+                       FIQHandler
+                               B                FIQHandler
+   91 00000050 EAFFFFFE 
+                       UndefHandler
+                               B                UndefHandler
+   92 00000054         
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+   93 00000054         ;-----------------------------------------------------
+   94 00000054         ;Initialize MAM to run at one clock cycle instead of sev
+                       en. Then, branch to main code. 
+   95 00000054         Reset_Handler
+   96 00000054         
+   97 00000054         ;Memory accelerator
+   98 00000054         MAM
+   99 00000054         
+  100 00000054 E59F10C0        LDR              r1,=MAMCR
+  101 00000058 E3A00000        MOV              R0, #0x0
+  102 0000005C E5810000        STR              R0, [R1]
+  103 00000060 E59F20B8        LDR              R2,=MAMTIM
+  104 00000064 E3A00001        MOV              R0,#0x1
+  105 00000068 E5820000        STR              R0,[R2]
+  106 0000006C E3A00002        MOV              R0,#0x2
+  107 00000070 E5810000        STR              R0,[R1]
+  108 00000074         
+  109 00000074         ;Go through each mode and set up the stack: FULL DESCEND
+                       ING
+  110 00000074         Stack_Setup
+  111 00000074         
+  112 00000074         ;SVC mode  
+  113 00000074 E321F0D3        MSR              CPSR_c, #MODE_SVC + I_Bit + F_B
+it
+  114 00000078 E59FD0A4        LDR              sp, =SRAM_BASE + SVC_Stack_Size
+  115 0000007C         
+  116 0000007C         ;FRQ mode  
+  117 0000007C E321F0D1        MSR              CPSR_c, #MODE_FIQ + I_Bit + F_B
+it
+  118 00000080 E59FD0A0        LDR              sp, =SRAM_BASE + FIQ_Stack_Size
+  119 00000084         
+  120 00000084         ;IRQ mode 
+  121 00000084 E321F0D2        MSR              CPSR_c, #MODE_IRQ + I_Bit + F_B
+it
+  122 00000088 E59FD09C        LDR              sp, =SRAM_BASE + IRQ_Stack_Size
+  123 0000008C         
+  124 0000008C         ;Abort mode  
+  125 0000008C E321F0D7        MSR              CPSR_c, #MODE_ABT + I_Bit + F_B
+it
+  126 00000090 E59FD098        LDR              sp, =SRAM_BASE + ABT_Stack_Size
+  127 00000094         
+  128 00000094         ;Undefined mode  
+  129 00000094 E321F0DB        MSR              CPSR_c, #MODE_UND + I_Bit + F_B
+it
+  130 00000098 E59FD094        LDR              sp, =SRAM_BASE + UND_Stack_Size
+  131 0000009C         
+  132 0000009C         ;System mode  
+  133 0000009C         ;MSR  CPSR_c, #MODE_SYS + I_Bit + F_Bit
+  134 0000009C         ;LDR  sp, =SRAM_BASE + SYS_Stack_Size 
+  135 0000009C         
+  136 0000009C         ;User mode: Set the stack for user mode then enable inte
+                       rrupts    
+  137 0000009C E3A0E010        MOV              r14, #MODE_USR
+  138 000000A0 E3CEE0C0        BIC              r14, r14, #(I_Bit + F_Bit)
+  139 000000A4 E121F00E        MSR              CPSR_c, r14
+  140 000000A8         
+  141 000000A8         ;leave startup in usercode with interrupts enabled
+  142 000000A8 E59FD088        LDR              sp, =SRAM_BASE + USR_Stack_Size
+  143 000000AC E59FF088        LDR              PC, =EINT
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  144 000000B0         ;LDR  PC, =user_code
+  145 000000B0         
+  146 000000B0 EA000018        B                DONE
+  147 000000B4         
+  148 000000B4         ;-----------------------------------------------------
+  149 000000B4         
+  150 000000B4         ;Software Interrupt subroutine
+  151 000000B4         SWIHandler
+  152 000000B4         
+  153 000000B4         ;**Stack stuff
+  154 000000B4 E92D5FFF        STMFD            SP!, {r0 - r12, LR} 
+                                                            ;preserve registers
+                                                            
+  155 000000B8         
+  156 000000B8         ;Determine SWI type
+  157 000000B8 E51E0004        LDR              r0, [LR,#-4]
+  158 000000BC E3E014FF        LDR              r1, =0xFFFFFF
+  159 000000C0 E0000001        AND              r0, r0, r1
+  160 000000C4         
+  161 000000C4         ;Light up all pins
+  162 000000C4 E3500001        CMP              r0, #1
+  163 000000C8 03A04CFF        LDREQ            r4, =LED_ALL
+  164 000000CC 0BFFFFFE        BLEQ             LEDs
+  165 000000D0         
+  166 000000D0         ;Light up alternating pins
+  167 000000D0 E3500002        CMP              r0, #2
+  168 000000D4 03A04CAA        LDREQ            r4, =LED_ALT
+  169 000000D8 0BFFFFFE        BLEQ             LEDs
+  170 000000DC         
+  171 000000DC E3500003        CMP              r0, #3
+  172 000000E0 0BFFFFFE        BLEQ             lcd_subs
+  173 000000E4         
+  174 000000E4         ;Stack stuff
+  175 000000E4 E8BD9FFF        LDMFD            SP!, {r0 - r12, PC}
+  176 000000E8         
+  177 000000E8         ;-----------------------------------------------------
+  178 000000E8         
+  179 000000E8         ;ISR subroutine
+  180 000000E8         ISR_SUB
+  181 000000E8         
+  182 000000E8 E25EE004        SUBS             LR, LR, #4
+  183 000000EC         
+  184 000000EC E92D5FFF        STMFD            SP!, {r0 - r12, LR} ;preserve r
+                                                            egisters 
+  185 000000F0         
+  186 000000F0 EBFFFFFE        BL               LED_delay
+  187 000000F4         
+  188 000000F4 E3A04CAA        LDR              r4, =LED_ALT
+  189 000000F8 EBFFFFFE        BL               LEDs
+  190 000000FC         
+  191 000000FC EBFFFFFE        BL               LED_delay
+  192 00000100         
+  193 00000100         ;Silence interrupt
+  194 00000100 E3A00008        MOV              r0, #0x8
+  195 00000104 E59F1034        LDR              r1, =EXTINT
+  196 00000108 E5912000        LDR              r2, [r1]
+  197 0000010C E1822000        ORR              r2, r2, r0
+  198 00000110 E5812000        STR              r2, [r1]
+  199 00000114         
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  200 00000114         ;Stack stuff
+  201 00000114 E8FD9FFF        LDMFD            SP!, {r0-r12, PC}^
+  202 00000118         
+  203 00000118         ;LDMFD SP!, {r0-r12,LR}
+  204 00000118         ;SUBS PC, LR, #4
+  205 00000118         
+  206 00000118         DONE
+  207 00000118         
+  208 00000118 EAFFFFFE 
+                       stop    B                stop
+  209 0000011C         
+  210 0000011C                 END
+              E01FC000 
+              E01FC004 
+              40000400 
+              40000200 
+              40000300 
+              40000500 
+              40000600 
+              40000100 
+              00000000 
+              E01FC140 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\mystartup.d -o.\objects\mystartup.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_
+v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" -
+-predefine="__UVISION_VERSION SETA 524" --list=.\listings\mystartup.lst mystart
+up.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DAbtHandler 00000044
+
+Symbol: DAbtHandler
+   Definitions
+      At line 88 in file mystartup.s
+   Uses
+      At line 82 in file mystartup.s
+      At line 88 in file mystartup.s
+
+DAbt_Addr 00000030
+
+Symbol: DAbt_Addr
+   Definitions
+      At line 82 in file mystartup.s
+   Uses
+      At line 73 in file mystartup.s
+Comment: DAbt_Addr used once
+DONE 00000118
+
+Symbol: DONE
+   Definitions
+      At line 206 in file mystartup.s
+   Uses
+      At line 146 in file mystartup.s
+Comment: DONE used once
+FIQHandler 0000004C
+
+Symbol: FIQHandler
+   Definitions
+      At line 90 in file mystartup.s
+   Uses
+      At line 85 in file mystartup.s
+      At line 90 in file mystartup.s
+
+FIQ_Addr 0000003C
+
+Symbol: FIQ_Addr
+   Definitions
+      At line 85 in file mystartup.s
+   Uses
+      At line 76 in file mystartup.s
+Comment: FIQ_Addr used once
+IRQHandler 00000048
+
+Symbol: IRQHandler
+   Definitions
+      At line 89 in file mystartup.s
+   Uses
+      At line 84 in file mystartup.s
+Comment: IRQHandler used once
+IRQ_Addr 00000038
+
+Symbol: IRQ_Addr
+   Definitions
+      At line 84 in file mystartup.s
+   Uses
+      At line 75 in file mystartup.s
+Comment: IRQ_Addr used once
+ISR_SUB 000000E8
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: ISR_SUB
+   Definitions
+      At line 180 in file mystartup.s
+   Uses
+      At line 55 in file mystartup.s
+      At line 89 in file mystartup.s
+
+MAM 00000054
+
+Symbol: MAM
+   Definitions
+      At line 98 in file mystartup.s
+   Uses
+      None
+Comment: MAM unused
+PAbtHandler 00000040
+
+Symbol: PAbtHandler
+   Definitions
+      At line 87 in file mystartup.s
+   Uses
+      At line 81 in file mystartup.s
+      At line 87 in file mystartup.s
+
+PAbt_Addr 0000002C
+
+Symbol: PAbt_Addr
+   Definitions
+      At line 81 in file mystartup.s
+   Uses
+      At line 72 in file mystartup.s
+Comment: PAbt_Addr used once
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 64 in file mystartup.s
+   Uses
+      None
+Comment: RESET unused
+Reset_Addr 00000020
+
+Symbol: Reset_Addr
+   Definitions
+      At line 78 in file mystartup.s
+   Uses
+      At line 69 in file mystartup.s
+Comment: Reset_Addr used once
+Reset_Handler 00000054
+
+Symbol: Reset_Handler
+   Definitions
+      At line 95 in file mystartup.s
+   Uses
+      At line 78 in file mystartup.s
+Comment: Reset_Handler used once
+SWIHandler 000000B4
+
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: SWIHandler
+   Definitions
+      At line 151 in file mystartup.s
+   Uses
+      At line 80 in file mystartup.s
+Comment: SWIHandler used once
+SWI_Addr 00000028
+
+Symbol: SWI_Addr
+   Definitions
+      At line 80 in file mystartup.s
+   Uses
+      At line 71 in file mystartup.s
+Comment: SWI_Addr used once
+Stack_Setup 00000074
+
+Symbol: Stack_Setup
+   Definitions
+      At line 110 in file mystartup.s
+   Uses
+      None
+Comment: Stack_Setup unused
+UndefHandler 00000050
+
+Symbol: UndefHandler
+   Definitions
+      At line 91 in file mystartup.s
+   Uses
+      At line 79 in file mystartup.s
+      At line 91 in file mystartup.s
+
+Undef_Addr 00000024
+
+Symbol: Undef_Addr
+   Definitions
+      At line 79 in file mystartup.s
+   Uses
+      At line 70 in file mystartup.s
+Comment: Undef_Addr used once
+VECTORS 00000000
+
+Symbol: VECTORS
+   Definitions
+      At line 68 in file mystartup.s
+   Uses
+      None
+Comment: VECTORS unused
+stop 00000118
+
+Symbol: stop
+   Definitions
+      At line 208 in file mystartup.s
+   Uses
+      At line 208 in file mystartup.s
+Comment: stop used once
+21 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+ABT_Stack_Size 00000500
+
+Symbol: ABT_Stack_Size
+   Definitions
+      At line 27 in file mystartup.s
+   Uses
+      At line 126 in file mystartup.s
+Comment: ABT_Stack_Size used once
+EINT0 00004000
+
+Symbol: EINT0
+   Definitions
+      At line 40 in file mystartup.s
+   Uses
+      None
+Comment: EINT0 unused
+EXTINT E01FC140
+
+Symbol: EXTINT
+   Definitions
+      At line 37 in file mystartup.s
+   Uses
+      At line 195 in file mystartup.s
+Comment: EXTINT used once
+EXTMODE E01FC148
+
+Symbol: EXTMODE
+   Definitions
+      At line 38 in file mystartup.s
+   Uses
+      None
+Comment: EXTMODE unused
+EXTPOLAR E01FC14C
+
+Symbol: EXTPOLAR
+   Definitions
+      At line 39 in file mystartup.s
+   Uses
+      None
+Comment: EXTPOLAR unused
+FIQ_Stack_Size 00000200
+
+Symbol: FIQ_Stack_Size
+   Definitions
+      At line 24 in file mystartup.s
+   Uses
+      At line 118 in file mystartup.s
+Comment: FIQ_Stack_Size used once
+F_Bit 00000040
+
+Symbol: F_Bit
+   Definitions
+      At line 17 in file mystartup.s
+   Uses
+      At line 113 in file mystartup.s
+      At line 117 in file mystartup.s
+      At line 121 in file mystartup.s
+      At line 125 in file mystartup.s
+      At line 129 in file mystartup.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 138 in file mystartup.s
+
+IO0DIR E0028000
+
+Symbol: IO0DIR
+   Definitions
+      At line 34 in file mystartup.s
+   Uses
+      None
+Comment: IO0DIR unused
+IRQ_Stack_Size 00000300
+
+Symbol: IRQ_Stack_Size
+   Definitions
+      At line 25 in file mystartup.s
+   Uses
+      At line 122 in file mystartup.s
+Comment: IRQ_Stack_Size used once
+I_Bit 00000080
+
+Symbol: I_Bit
+   Definitions
+      At line 16 in file mystartup.s
+   Uses
+      At line 113 in file mystartup.s
+      At line 117 in file mystartup.s
+      At line 121 in file mystartup.s
+      At line 125 in file mystartup.s
+      At line 129 in file mystartup.s
+      At line 138 in file mystartup.s
+
+LED_ALL 0000FF00
+
+Symbol: LED_ALL
+   Definitions
+      At line 50 in file mystartup.s
+   Uses
+      At line 163 in file mystartup.s
+Comment: LED_ALL used once
+LED_ALT 0000AA00
+
+Symbol: LED_ALT
+   Definitions
+      At line 51 in file mystartup.s
+   Uses
+      At line 168 in file mystartup.s
+      At line 188 in file mystartup.s
+
+LED_FOUR 00000F00
+
+Symbol: LED_FOUR
+   Definitions
+      At line 52 in file mystartup.s
+   Uses
+      None
+Comment: LED_FOUR unused
+MAMCR E01FC000
+
+Symbol: MAMCR
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 3 in file mystartup.s
+   Uses
+      At line 100 in file mystartup.s
+Comment: MAMCR used once
+MAMTIM E01FC004
+
+Symbol: MAMTIM
+   Definitions
+      At line 4 in file mystartup.s
+   Uses
+      At line 103 in file mystartup.s
+Comment: MAMTIM used once
+MODE_ABT 00000017
+
+Symbol: MODE_ABT
+   Definitions
+      At line 11 in file mystartup.s
+   Uses
+      At line 125 in file mystartup.s
+Comment: MODE_ABT used once
+MODE_FIQ 00000011
+
+Symbol: MODE_FIQ
+   Definitions
+      At line 8 in file mystartup.s
+   Uses
+      At line 117 in file mystartup.s
+Comment: MODE_FIQ used once
+MODE_IRQ 00000012
+
+Symbol: MODE_IRQ
+   Definitions
+      At line 9 in file mystartup.s
+   Uses
+      At line 121 in file mystartup.s
+Comment: MODE_IRQ used once
+MODE_SVC 00000013
+
+Symbol: MODE_SVC
+   Definitions
+      At line 10 in file mystartup.s
+   Uses
+      At line 113 in file mystartup.s
+Comment: MODE_SVC used once
+MODE_SYS 0000001F
+
+Symbol: MODE_SYS
+   Definitions
+      At line 13 in file mystartup.s
+   Uses
+      None
+Comment: MODE_SYS unused
+MODE_UND 0000001B
+
+Symbol: MODE_UND
+   Definitions
+      At line 12 in file mystartup.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 129 in file mystartup.s
+Comment: MODE_UND used once
+MODE_USR 00000010
+
+Symbol: MODE_USR
+   Definitions
+      At line 7 in file mystartup.s
+   Uses
+      At line 137 in file mystartup.s
+Comment: MODE_USR used once
+PINSEL1 E002C004
+
+Symbol: PINSEL1
+   Definitions
+      At line 33 in file mystartup.s
+   Uses
+      None
+Comment: PINSEL1 unused
+SRAM_BASE 40000000
+
+Symbol: SRAM_BASE
+   Definitions
+      At line 21 in file mystartup.s
+   Uses
+      At line 114 in file mystartup.s
+      At line 118 in file mystartup.s
+      At line 122 in file mystartup.s
+      At line 126 in file mystartup.s
+      At line 130 in file mystartup.s
+      At line 142 in file mystartup.s
+
+SVC_Stack_Size 00000400
+
+Symbol: SVC_Stack_Size
+   Definitions
+      At line 26 in file mystartup.s
+   Uses
+      At line 114 in file mystartup.s
+Comment: SVC_Stack_Size used once
+UND_Stack_Size 00000600
+
+Symbol: UND_Stack_Size
+   Definitions
+      At line 28 in file mystartup.s
+   Uses
+      At line 130 in file mystartup.s
+Comment: UND_Stack_Size used once
+USR_Stack_Size 00000100
+
+Symbol: USR_Stack_Size
+   Definitions
+      At line 23 in file mystartup.s
+   Uses
+      At line 142 in file mystartup.s
+Comment: USR_Stack_Size used once
+VICIntEnClear FFFFF014
+
+Symbol: VICIntEnClear
+   Definitions
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 46 in file mystartup.s
+   Uses
+      None
+Comment: VICIntEnClear unused
+VICIntEnable FFFFF010
+
+Symbol: VICIntEnable
+   Definitions
+      At line 45 in file mystartup.s
+   Uses
+      None
+Comment: VICIntEnable unused
+VICIntSelect FFFFF00C
+
+Symbol: VICIntSelect
+   Definitions
+      At line 44 in file mystartup.s
+   Uses
+      None
+Comment: VICIntSelect unused
+30 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+DELAY 00000000
+
+Symbol: DELAY
+   Definitions
+      At line 60 in file mystartup.s
+   Uses
+      None
+Comment: DELAY unused
+EINT 00000000
+
+Symbol: EINT
+   Definitions
+      At line 62 in file mystartup.s
+   Uses
+      At line 143 in file mystartup.s
+Comment: EINT used once
+LED_delay 00000000
+
+Symbol: LED_delay
+   Definitions
+      At line 61 in file mystartup.s
+   Uses
+      At line 186 in file mystartup.s
+      At line 191 in file mystartup.s
+
+LEDs 00000000
+
+Symbol: LEDs
+   Definitions
+      At line 58 in file mystartup.s
+   Uses
+      At line 164 in file mystartup.s
+      At line 169 in file mystartup.s
+      At line 189 in file mystartup.s
+
+lcd_subs 00000000
+
+Symbol: lcd_subs
+   Definitions
+      At line 59 in file mystartup.s
+   Uses
+      At line 172 in file mystartup.s
+Comment: lcd_subs used once
+user_code 00000000
+
+Symbol: user_code
+   Definitions
+      At line 57 in file mystartup.s
+   Uses
+      None
+Comment: user_code unused
+6 symbols
+391 symbols in table

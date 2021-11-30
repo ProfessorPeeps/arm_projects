@@ -1,0 +1,99 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;-------------------------------------------------------
+                       -----------------  
+    2 00000000 002DC6C0 
+                       DELAYVAL
+                               EQU              3000000     ;1 sec delay value 
+                                                            (12e6 Hz / 4 clk cy
+                                                            c)^-1
+    3 00000000         ;-------------------------------------------------------
+                       -----------------
+    4 00000000         
+    5 00000000                 IMPORT           LEDs
+    6 00000000                 GLOBAL           LED_delay
+    7 00000000         
+    8 00000000                 AREA             mycode,CODE,READONLY
+    9 00000000         
+   10 00000000         
+   11 00000000         LED_delay
+   12 00000000 E59F9008        LDR              r9, =DELAYVAL
+   13 00000004         
+   14 00000004         wait
+   15 00000004 E2599001        SUBS             r9, r9, #1
+   16 00000008 1AFFFFFD        BNE              wait
+   17 0000000C E12FFF1E        BX               LR
+   18 00000010         
+   19 00000010                 END
+              002DC6C0 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\led_delay.d -o.\objects\led_delay.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_
+v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" -
+-predefine="__UVISION_VERSION SETA 524" --list=.\listings\led_delay.lst LED_del
+ay.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+LED_delay 00000000
+
+Symbol: LED_delay
+   Definitions
+      At line 11 in file LED_delay.s
+   Uses
+      At line 6 in file LED_delay.s
+Comment: LED_delay used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 8 in file LED_delay.s
+   Uses
+      None
+Comment: mycode unused
+wait 00000004
+
+Symbol: wait
+   Definitions
+      At line 14 in file LED_delay.s
+   Uses
+      At line 16 in file LED_delay.s
+Comment: wait used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+DELAYVAL 002DC6C0
+
+Symbol: DELAYVAL
+   Definitions
+      At line 2 in file LED_delay.s
+   Uses
+      At line 12 in file LED_delay.s
+Comment: DELAYVAL used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+LEDs 00000000
+
+Symbol: LEDs
+   Definitions
+      At line 5 in file LED_delay.s
+   Uses
+      None
+Comment: LEDs unused
+1 symbol
+339 symbols in table

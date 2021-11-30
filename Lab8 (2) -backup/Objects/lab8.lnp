@@ -1,0 +1,8 @@
+--cpu ARM7TDMI
+".\objects\lab8.o"
+".\objects\mystartup.o"
+".\objects\delay.o"
+--ro-base 0x00000000 --entry 0x00000000 --rw-base 0x40000000 --strict
+--first=mystartup.o(RESET) --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\lab8.map" -o .\Objects\lab8.axf

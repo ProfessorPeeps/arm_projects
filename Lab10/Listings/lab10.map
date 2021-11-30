@@ -1,0 +1,137 @@
+Component: ARM Compiler 5.06 update 5 (build 528) Tool: armlink [4d35e2]
+
+==============================================================================
+
+Section Cross References
+
+    mystartup.o(RESET) refers (Special) to lcd_delay.o(mycode) for DELAY
+    mystartup.o(RESET) refers (Special) to lab10.o(mycode) for user_code
+    mystartup.o(RESET) refers to lab8.o(mycode) for LEDs
+    mystartup.o(RESET) refers to lab9.o(mycode) for lcd_subs
+    mystartup.o(RESET) refers to led_delay.o(mycode) for LED_delay
+    mystartup.o(RESET) refers to eint.o(mycode) for EINT
+    lab10.o(mycode) refers (Special) to eint.o(mycode) for EINT
+    lab10.o(mycode) refers to led_delay.o(mycode) for LED_delay
+    lab8.o(mycode) refers to led_delay.o(mycode) for LED_delay
+    lab9.o(mycode) refers to lcd_delay.o(mycode) for DELAY
+
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    RESET                                    0x00000000   Section      324  mystartup.o(RESET)
+    EINT.s                                   0x00000000   Number         0  eint.o ABSOLUTE
+    LCD_delay.s                              0x00000000   Number         0  lcd_delay.o ABSOLUTE
+    LED_delay.s                              0x00000000   Number         0  led_delay.o ABSOLUTE
+    lab10.s                                  0x00000000   Number         0  lab10.o ABSOLUTE
+    lab8.s                                   0x00000000   Number         0  lab8.o ABSOLUTE
+    lab9.s                                   0x00000000   Number         0  lab9.o ABSOLUTE
+    mystartup.s                              0x00000000   Number         0  mystartup.o ABSOLUTE
+    PAbtHandler                              0x00000040   ARM Code       4  mystartup.o(RESET)
+    DAbtHandler                              0x00000044   ARM Code       4  mystartup.o(RESET)
+    IRQHandler                               0x00000048   ARM Code       4  mystartup.o(RESET)
+    FIQHandler                               0x0000004c   ARM Code       4  mystartup.o(RESET)
+    UndefHandler                             0x00000050   ARM Code       4  mystartup.o(RESET)
+    Reset_Handler                            0x00000054   ARM Code       0  mystartup.o(RESET)
+    SWIHandler                               0x000000b4   ARM Code       0  mystartup.o(RESET)
+    mycode                                   0x00000144   Section       24  lab10.o(mycode)
+    mycode                                   0x0000015c   Section      172  lab8.o(mycode)
+    mycode                                   0x00000208   Section       20  led_delay.o(mycode)
+    mycode                                   0x0000021c   Section      852  lab9.o(mycode)
+    mycode                                   0x00000570   Section       44  lcd_delay.o(mycode)
+    mycode                                   0x0000059c   Section      160  eint.o(mycode)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv1$ARM_ISAv4$S$PE$A:L22$X:L11$S22$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    ISR_SUB                                  0x000000e8   ARM Code       0  mystartup.o(RESET)
+    user_code                                0x00000144   ARM Code       0  lab10.o(mycode)
+    LEDs                                     0x0000015c   ARM Code       0  lab8.o(mycode)
+    LED_delay                                0x00000208   ARM Code       0  led_delay.o(mycode)
+    lcd_subs                                 0x0000021c   ARM Code       0  lab9.o(mycode)
+    DELAY                                    0x00000570   ARM Code       0  lcd_delay.o(mycode)
+    EINT                                     0x0000059c   ARM Code       0  eint.o(mycode)
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x00000000
+
+  Load Region LR_1 (Base: 0x00000000, Size: 0x0000063c, Max: 0xffffffff, ABSOLUTE)
+
+    Execution Region ER_RO (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x0000063c, Max: 0xffffffff, ABSOLUTE)
+
+    Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x00000000   0x00000000   0x00000144   Code   RO            1  * RESET               mystartup.o
+    0x00000144   0x00000144   0x00000018   Code   RO            6  * mycode              lab10.o
+    0x0000015c   0x0000015c   0x000000ac   Code   RO            9    mycode              lab8.o
+    0x00000208   0x00000208   0x00000014   Code   RO           12    mycode              led_delay.o
+    0x0000021c   0x0000021c   0x00000354   Code   RO           15  * mycode              lab9.o
+    0x00000570   0x00000570   0x0000002c   Code   RO           18    mycode              lcd_delay.o
+    0x0000059c   0x0000059c   0x000000a0   Code   RO           21    mycode              eint.o
+
+
+    Execution Region ER_RW (Exec base: 0x40000000, Load base: 0x0000063c, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+    Execution Region ER_ZI (Exec base: 0x40000000, Load base: 0x0000063c, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+       160         24          0          0          0        224   eint.o
+        24          0          0          0          0        192   lab10.o
+       172         20          0          0          0        228   lab8.o
+       852         80          0          0          0        392   lab9.o
+        44          0          0          0          0        208   lcd_delay.o
+        20          4          0          0          0        200   led_delay.o
+       324         72          0          0          0        320   mystartup.o
+
+    ----------------------------------------------------------------------
+      1596        200          0          0          0       1764   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+      1596        200          0          0          0       1764   Grand Totals
+      1596        200          0          0          0       1764   ELF Image Totals
+      1596        200          0          0          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                 1596 (   1.56kB)
+    Total RW  Size (RW Data + ZI Data)                 0 (   0.00kB)
+    Total ROM Size (Code + RO Data + RW Data)       1596 (   1.56kB)
+
+==============================================================================
+

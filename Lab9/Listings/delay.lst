@@ -1,0 +1,81 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 IMPORT           user_code
+    2 00000000                 IMPORT           LCD_cmd
+    3 00000000         ;delay value (4 clk cyc / 12e6 Hz)
+    4 00000000         
+    5 00000000                 GLOBAL           DELAY
+    6 00000000                 AREA             mycode,CODE,READONLY
+    7 00000000         
+    8 00000000         DELAY
+    9 00000000         
+   10 00000000         
+   11 00000000         wait
+   12 00000000 E2599001        SUBS             r9, r9, #1
+   13 00000004 1AFFFFFD        BNE              wait
+   14 00000008 E12FFF1E        BX               LR
+   15 0000000C         
+   16 0000000C                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\delay.d -o.\objects\delay.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\C
+MSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefi
+ne="__UVISION_VERSION SETA 524" --list=.\listings\delay.lst delay.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DELAY 00000000
+
+Symbol: DELAY
+   Definitions
+      At line 8 in file delay.s
+   Uses
+      At line 5 in file delay.s
+Comment: DELAY used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 6 in file delay.s
+   Uses
+      None
+Comment: mycode unused
+wait 00000000
+
+Symbol: wait
+   Definitions
+      At line 11 in file delay.s
+   Uses
+      At line 13 in file delay.s
+Comment: wait used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+LCD_cmd 00000000
+
+Symbol: LCD_cmd
+   Definitions
+      At line 2 in file delay.s
+   Uses
+      None
+Comment: LCD_cmd unused
+user_code 00000000
+
+Symbol: user_code
+   Definitions
+      At line 1 in file delay.s
+   Uses
+      None
+Comment: user_code unused
+2 symbols
+337 symbols in table

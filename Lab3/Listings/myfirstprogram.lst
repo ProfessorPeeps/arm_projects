@@ -1,0 +1,60 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;Names: Juan Silva & Isaias Andrade
+    2 00000000         ;Emails: juan.silva.793@my.csun.edu
+    3 00000000         ;   isaias.andrade.475@my.csun.edu
+    4 00000000         ;Last Modified: 2/2/2018
+    5 00000000         ;Version No.: 1
+    6 00000000         ;Description: 
+    7 00000000         
+    8 00000000                 GLOBAL           ResetHandler
+    9 00000000                 AREA             RESET,CODE,READONLY
+   10 00000000         ResetHandler
+   11 00000000 E3A00011        MOV              r0, #0x11   ;Set loop counter t
+                                                            o 17
+   12 00000004 E1A01080        MOV              r1, r0, LSL #1 ;
+   13 00000008 E1A02081        MOV              r2, r1, LSL #1 ;
+   14 0000000C EAFFFFFE 
+                       stop    B                stop
+   15 00000010                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\myfirstprogram.d -o.\objects\myfirstprogram.o -IC:\Keil_v5\ARM\RV31\INC 
+-IC:\Keil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL
+ SETA 1" --predefine="__UVISION_VERSION SETA 524" --list=.\listings\myfirstprog
+ram.lst myFirstProgram.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 9 in file myFirstProgram.s
+   Uses
+      None
+Comment: RESET unused
+ResetHandler 00000000
+
+Symbol: ResetHandler
+   Definitions
+      At line 10 in file myFirstProgram.s
+   Uses
+      At line 8 in file myFirstProgram.s
+Comment: ResetHandler used once
+stop 0000000C
+
+Symbol: stop
+   Definitions
+      At line 14 in file myFirstProgram.s
+   Uses
+      At line 14 in file myFirstProgram.s
+Comment: stop used once
+3 symbols
+335 symbols in table

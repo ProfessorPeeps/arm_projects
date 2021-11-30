@@ -1,0 +1,92 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 IMPORT           user_code
+    2 00000000         
+    3 00000000 0007A120 
+                       DELAYVAL
+                               EQU              500000      ;delay value (4 clk
+                                                             cyc / 12e6 Hz)
+    4 00000000         
+    5 00000000                 GLOBAL           delay
+    6 00000000                 AREA             mycode,CODE,READONLY
+    7 00000000         
+    8 00000000         delay
+    9 00000000 E59F3008        LDR              r3, =DELAYVAL
+   10 00000004         
+   11 00000004         wait
+   12 00000004 E2533001        SUBS             r3, r3, #1
+   13 00000008 1AFFFFFD        BNE              wait
+   14 0000000C E12FFF1E        BX               LR
+   15 00000010         
+   16 00000010                 END
+              0007A120 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\o
+bjects\delay.d -o.\objects\delay.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\C
+MSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefi
+ne="__UVISION_VERSION SETA 524" --list=.\listings\delay.lst delay.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+delay 00000000
+
+Symbol: delay
+   Definitions
+      At line 8 in file delay.s
+   Uses
+      At line 5 in file delay.s
+Comment: delay used once
+mycode 00000000
+
+Symbol: mycode
+   Definitions
+      At line 6 in file delay.s
+   Uses
+      None
+Comment: mycode unused
+wait 00000004
+
+Symbol: wait
+   Definitions
+      At line 11 in file delay.s
+   Uses
+      At line 13 in file delay.s
+Comment: wait used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+DELAYVAL 0007A120
+
+Symbol: DELAYVAL
+   Definitions
+      At line 3 in file delay.s
+   Uses
+      At line 9 in file delay.s
+Comment: DELAYVAL used once
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+user_code 00000000
+
+Symbol: user_code
+   Definitions
+      At line 1 in file delay.s
+   Uses
+      None
+Comment: user_code unused
+1 symbol
+339 symbols in table

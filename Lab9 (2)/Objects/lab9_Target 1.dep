@@ -1,0 +1,4 @@
+Dependencies for Project 'lab9', Target 'Target 1': (DO NOT MODIFY !)
+F (.\lab9.s)(0x5AE3A46B)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 524"--list .\listings\lab9.lst --xref -o .\objects\lab9.o --depend .\objects\lab9.d)
+F (.\delay.s)(0x5AD69FAE)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 524"--list .\listings\delay.lst --xref -o .\objects\delay.o --depend .\objects\delay.d)
+F (.\mystartup.s)(0x5AD69FCA)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork -IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 524"--list .\listings\mystartup.lst --xref -o .\objects\mystartup.o --depend .\objects\mystartup.d)

@@ -1,0 +1,109 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html><head>
+<title>Static Call Graph - [.\Objects\lab9.axf]</title></head>
+<body><HR>
+<H1>Static Call Graph for image .\Objects\lab9.axf</H1><HR>
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Apr 27 16:39:53 2018
+<BR><P>
+<H3>Maximum Stack Usage =          0 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+Call chain for Maximum Stack Depth:</H3>
+
+<P>
+<H3>
+Functions with no stack information
+</H3><UL>
+ <LI><a href="#[7]">lcd_subs</a>
+ <LI><a href="#[8]">DELAY</a>
+ <LI><a href="#[2]">SWIHandler</a>
+ <LI><a href="#[3]">PAbtHandler</a>
+ <LI><a href="#[4]">DAbtHandler</a>
+ <LI><a href="#[5]">IRQHandler</a>
+ <LI><a href="#[6]">FIQHandler</a>
+ <LI><a href="#[1]">UndefHandler</a>
+</UL>
+</UL>
+<P>
+<H3>
+Mutually Recursive functions
+</H3> <LI><a href="#[2]">SWIHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[2]">SWIHandler</a><BR>
+ <LI><a href="#[3]">PAbtHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[3]">PAbtHandler</a><BR>
+ <LI><a href="#[4]">DAbtHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[4]">DAbtHandler</a><BR>
+ <LI><a href="#[5]">IRQHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[5]">IRQHandler</a><BR>
+ <LI><a href="#[6]">FIQHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[6]">FIQHandler</a><BR>
+ <LI><a href="#[1]">UndefHandler</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[1]">UndefHandler</a><BR>
+</UL>
+<P>
+<H3>
+Function Pointers
+</H3><UL>
+ <LI><a href="#[4]">DAbtHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[6]">FIQHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[5]">IRQHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[3]">PAbtHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[2]">SWIHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[1]">UndefHandler</a> from mystartup.o(RESET) referenced from mystartup.o(RESET)
+ <LI><a href="#[7]">lcd_subs</a> from lab9.o(mycode) referenced 2 times from mystartup.o(RESET)
+</UL>
+<P>
+<H3>
+Global Symbols
+</H3>
+<P><STRONG><a name="[7]"></a>lcd_subs</STRONG> (ARM, 0 bytes, Stack size unknown bytes, lab9.o(mycode))
+<BR><BR>[Calls]<UL><LI><a href="#[8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DELAY
+</UL>
+<BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UndefHandler
+</UL>
+
+<P><STRONG><a name="[8]"></a>DELAY</STRONG> (ARM, 0 bytes, Stack size unknown bytes, delay.o(mycode))
+<BR><BR>[Called By]<UL><LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_subs
+</UL>
+<P>
+<H3>
+Local Symbols
+</H3>
+<P><STRONG><a name="[2]"></a>SWIHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SWIHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SWIHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL>
+<P><STRONG><a name="[3]"></a>PAbtHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PAbtHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PAbtHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL>
+<P><STRONG><a name="[4]"></a>DAbtHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DAbtHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DAbtHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL>
+<P><STRONG><a name="[5]"></a>IRQHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IRQHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IRQHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL>
+<P><STRONG><a name="[6]"></a>FIQHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FIQHandler
+</UL>
+<BR>[Called By]<UL><LI><a href="#[6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FIQHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL>
+<P><STRONG><a name="[1]"></a>UndefHandler</STRONG> (ARM, 4 bytes, Stack size unknown bytes, mystartup.o(RESET))
+<BR><BR>[Calls]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UndefHandler
+<LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lcd_subs
+</UL>
+<BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UndefHandler
+</UL>
+<BR>[Address Reference Count : 1]<UL><LI> mystartup.o(RESET)
+</UL><P>
+<H3>
+Undefined Global Symbols
+</H3><HR></body></html>
